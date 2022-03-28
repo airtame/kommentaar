@@ -1,5 +1,3 @@
-github.com/airtame/kommentaar v0.1.6-0.20220314175454-d062f3ccab52 h1:a8tXtG2k+h+yX6z2ifIbdk+pmKe66dw8dO0/Io6/Okg=
-github.com/airtame/kommentaar v0.1.6-0.20220314175454-d062f3ccab52/go.mod h1:id6DVgKeAhwx4plOT9ekE+prYm1SVvgXLge0fDgEfgw=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/google/go-cmp v0.5.7 h1:81/ik6ipDQS2aGcBfIN5dHDB36BwrStyeAQquSYCV4o=
