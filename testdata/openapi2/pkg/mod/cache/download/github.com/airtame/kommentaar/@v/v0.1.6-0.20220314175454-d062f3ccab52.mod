@@ -1,4 +1,4 @@
-module github.com/teamwork/kommentaar
+module github.com/airtame/kommentaar
 
 go 1.12
 

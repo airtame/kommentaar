@@ -1,14 +1,14 @@
 // Package kconfig loads the configuration for Kommentaar.
-package kconfig // import "github.com/teamwork/kommentaar/kconfig"
+package kconfig // import "github.com/airtame/kommentaar/kconfig"
 
 import (
 	"fmt"
 	"io"
 	"strings"
 
-	"github.com/teamwork/kommentaar/docparse"
-	"github.com/teamwork/kommentaar/html"
-	"github.com/teamwork/kommentaar/openapi2"
+	"github.com/airtame/kommentaar/docparse"
+	"github.com/airtame/kommentaar/html"
+	"github.com/airtame/kommentaar/openapi2"
 	"github.com/teamwork/utils/goutil"
 	"zgo.at/sconfig"
 	_ "zgo.at/sconfig/handlers/html/template" // template.HTML handler

@@ -4,7 +4,7 @@ package example
 import (
 	"fmt"
 
-	"github.com/teamwork/kommentaar/example/exampleimport"
+	"github.com/airtame/kommentaar/example/exampleimport"
 )
 
 // POST /foo/{id} foobar

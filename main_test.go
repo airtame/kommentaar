@@ -10,9 +10,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/teamwork/kommentaar/docparse"
-	"github.com/teamwork/kommentaar/kconfig"
-	"github.com/teamwork/kommentaar/openapi2"
+	"github.com/airtame/kommentaar/docparse"
+	"github.com/airtame/kommentaar/kconfig"
+	"github.com/airtame/kommentaar/openapi2"
 	"github.com/teamwork/test"
 	"github.com/teamwork/test/diff"
 )

@@ -1,5 +1,5 @@
 // Package srvhttp contains HTTP handlers for serving Kommentaar documentation.
-package srvhttp // import "github.com/teamwork/kommentaar/srvhttp"
+package srvhttp // import "github.com/airtame/kommentaar/srvhttp"
 
 import (
 	"bytes"
@@ -9,10 +9,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/teamwork/kommentaar/docparse"
-	"github.com/teamwork/kommentaar/html"
-	"github.com/teamwork/kommentaar/kconfig"
-	"github.com/teamwork/kommentaar/openapi2"
+	"github.com/airtame/kommentaar/docparse"
+	"github.com/airtame/kommentaar/html"
+	"github.com/airtame/kommentaar/kconfig"
+	"github.com/airtame/kommentaar/openapi2"
 )
 
 // Args for the HTTP handlers.

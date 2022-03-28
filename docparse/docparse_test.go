@@ -2,6 +2,8 @@ package docparse
 
 import (
 	"fmt"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"reflect"
 	"testing"
 
@@ -272,7 +274,7 @@ Response 200: {empty}
 POST /path
 
 Response: {empty}
-Response 400 (w00t): {empty}
+Response 400 (w00t): {empty} (some description goes here)
 			`,
 			"",
 			[]*Endpoint{{
@@ -285,7 +287,7 @@ Response 400 (w00t): {empty}
 					},
 					400: {
 						ContentType: "w00t",
-						Body:        &Ref{Description: "400 Bad Request (no data)"},
+						Body:        &Ref{Description: "some description goes here"},
 					},
 				},
 			}},
@@ -472,7 +474,7 @@ func TestGetReference(t *testing.T) {
 	}{
 		{"testObject", "", &Reference{
 			Name:    "testObject",
-			Package: "github.com/teamwork/kommentaar/docparse",
+			Package: "github.com/airtame/kommentaar/docparse",
 			File:    "", // TODO
 			Lookup:  "docparse.testObject",
 			Context: "req",
@@ -542,8 +544,9 @@ func TestGetReference(t *testing.T) {
 				}
 			}
 
-			if !reflect.DeepEqual(tt.want, out) {
-				t.Errorf("\n%v", diff.Diff(tt.want, out))
+			cmpDiff := cmp.Diff(tt.want, out, cmpopts.IgnoreFields(Reference{}, "Package"))
+			if cmpDiff != "" {
+				t.Errorf("\n%v", cmpDiff)
 			}
 		})
 	}

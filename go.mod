@@ -12,5 +12,3 @@ require (
 	gopkg.in/yaml.v2 v2.2.2
 	zgo.at/sconfig v1.2.2-0.20211017232425-870f818a71b7
 )
-
-replace github.com/teamwork/kommentaar => github.com/airtame/kommentaar master
