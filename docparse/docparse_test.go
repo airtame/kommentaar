@@ -274,7 +274,30 @@ Response 200: {empty}
 POST /path
 
 Response: {empty}
-Response 400 (w00t): {empty} (some description goes here)
+Response 400 (w00t): {empty}
+			`,
+			"",
+			[]*Endpoint{{
+				Method: "POST",
+				Path:   "/path",
+				Responses: map[int]Response{
+					200: {
+						ContentType: "application/json",
+						Body:        &Ref{Description: "200 OK (no data)"},
+					},
+					400: {
+						ContentType: "w00t",
+						Body:        &Ref{Description: "400 Bad Request (no data)"},
+					},
+				},
+			}},
+		},
+
+		{"response-ref", `
+POST /path
+
+Response: {empty}
+Response 400 (w00t): {empty} [some description goes here]
 			`,
 			"",
 			[]*Endpoint{{
