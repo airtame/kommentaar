@@ -430,30 +430,30 @@ func ParseResponse(prog *Program, filePath, line string) (int, *Response, error)
 		return 0, nil, fmt.Errorf("could not parse response %v params: %v", code, err)
 	}
 
-	codeText := fmt.Sprintf("%d %s", code, http.StatusText(int(code)))
+	var description string
+	if resp[7] != "" {
+		description = resp[7]
+	}
+
 	switch r.Body.Description {
 	case "":
-		r.Body.Description = codeText
+		r.Body.Description = description
 	case refEmpty:
-		r.Body.Description = codeText + " (no data)"
+		r.Body.Description = description + " (no data)"
 	case refData:
 		if resp[4] == "" {
 			return 0, nil, fmt.Errorf("explicit Content-Type required for {data} in %v: %q",
 				filePath, line)
 		}
 
-		r.Body.Description = fmt.Sprintf("%s (%s data)", codeText, r.ContentType)
+		r.Body.Description = fmt.Sprintf("%s (%s data)", description, r.ContentType)
 	case refDefault:
 		// Make sure it's defined.
 		if _, ok := prog.Config.DefaultResponse[int(code)]; !ok {
 			return 0, nil, fmt.Errorf("no default response for %v in %v: %q",
 				code, filePath, line)
 		}
-		r.Body.Description = codeText
-	}
-
-	if resp[7] != "" {
-		r.Body.Description = resp[7]
+		r.Body.Description = description
 	}
 
 	return int(code), &r, nil
