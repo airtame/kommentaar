@@ -12,7 +12,7 @@ import (
 )
 
 func TestParseComments(t *testing.T) {
-	stdResp := map[int]Response{200: Response{
+	stdResp := map[int]Response{200: {
 		ContentType: "application/json",
 		Body:        &Ref{Description: "200 OK (no data)"},
 	}}
@@ -310,7 +310,7 @@ Response 400 (w00t): {empty} [some description goes here]
 					},
 					400: {
 						ContentType: "w00t",
-						Body:        &Ref{Description: "some description goes here"},
+						Body:        &Ref{Description: "400 Bad Request (no data) some description goes here"},
 					},
 				},
 			}},

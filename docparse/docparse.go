@@ -430,31 +430,32 @@ func ParseResponse(prog *Program, filePath, line string) (int, *Response, error)
 		return 0, nil, fmt.Errorf("could not parse response %v params: %v", code, err)
 	}
 
-	var description string
-	if resp[7] != "" {
-		description = resp[7]
-	}
+	codeText := fmt.Sprintf("%d %s", code, http.StatusText(int(code)))
+	bodyDesc := []string{codeText}
 
 	switch r.Body.Description {
 	case "":
-		r.Body.Description = description
 	case refEmpty:
-		r.Body.Description = description + " (no data)"
+		bodyDesc = append(bodyDesc, "(no data)")
 	case refData:
 		if resp[4] == "" {
 			return 0, nil, fmt.Errorf("explicit Content-Type required for {data} in %v: %q",
 				filePath, line)
 		}
-
-		r.Body.Description = fmt.Sprintf("%s (%s data)", description, r.ContentType)
+		bodyDesc = append(bodyDesc, fmt.Sprintf("(%s data)", r.ContentType))
 	case refDefault:
 		// Make sure it's defined.
 		if _, ok := prog.Config.DefaultResponse[int(code)]; !ok {
 			return 0, nil, fmt.Errorf("no default response for %v in %v: %q",
 				code, filePath, line)
 		}
-		r.Body.Description = description
 	}
+
+	if resp[7] != "" {
+		bodyDesc = append(bodyDesc, resp[7])
+	}
+
+	r.Body.Description = strings.Join(bodyDesc, " ")
 
 	return int(code), &r, nil
 }
@@ -464,7 +465,8 @@ var allMethods = []string{http.MethodGet, http.MethodHead, http.MethodPost,
 	http.MethodOptions, http.MethodTrace}
 
 // Get the first "start line" of a documentation block:
-//   POST /path tag1 tag2
+//
+//	POST /path tag1 tag2
 //
 // The tags are optional, and the method is case-sensitive.
 func parseStartLine(line string) (string, string, []string) {
