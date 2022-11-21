@@ -316,6 +316,69 @@ Response 400 (w00t): {empty} [some description goes here]
 			}},
 		},
 
+		{"response-ref", `
+POST /path
+
+Response 200: []EmptyInterface
+			`,
+			"",
+			[]*Endpoint{{
+				Method: "POST",
+				Path:   "/path",
+				Responses: map[int]Response{
+					200: {
+						ContentType: "application/json",
+						Body: &Ref{
+							Description: "200 OK",
+							Reference:   "docparse.EmptyInterface",
+						},
+					},
+				},
+			}},
+		},
+
+		{"response-ref", `
+POST /path
+
+Response 200: EmptyInterface
+			`,
+			"",
+			[]*Endpoint{{
+				Method: "POST",
+				Path:   "/path",
+				Responses: map[int]Response{
+					200: {
+						ContentType: "application/json",
+						Body: &Ref{
+							Description: "200 OK",
+							Reference:   "docparse.EmptyInterface",
+						},
+					},
+				},
+			}},
+		},
+
+		{"response-ref", `
+POST /path
+
+Response 200: EmptyStructInterfaces
+			`,
+			"",
+			[]*Endpoint{{
+				Method: "POST",
+				Path:   "/path",
+				Responses: map[int]Response{
+					200: {
+						ContentType: "application/json",
+						Body: &Ref{
+							Description: "200 OK",
+							Reference:   "docparse.EmptyStructInterfaces",
+						},
+					},
+				},
+			}},
+		},
+
 		//{"err-double-code", `
 		//		POST /path
 

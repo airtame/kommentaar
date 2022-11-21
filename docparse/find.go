@@ -125,6 +125,12 @@ func findType(currentFile, pkgPath, name string) (
 	err error,
 ) {
 	dbg("findType: file: %#v, pkgPath: %#v, name: %#v", currentFile, pkgPath, name)
+
+	switch name {
+	case "any", "interface", "interface{}":
+		name = "InterfaceType"
+	}
+
 	resolvedPath, pkg, err := resolvePackage(currentFile, pkgPath)
 	if err != nil {
 		return nil, "", "", fmt.Errorf("could not resolve package: %v", err)
@@ -216,6 +222,15 @@ func getDecls(pkg *build.Package, pkgPath string) ([]declCache, error) {
 		return decls, nil
 	}
 
+	// Add InterfaceType by default for interface{} decls
+	decls = append(decls, declCache{
+		ts: &ast.TypeSpec{
+			Type: &ast.InterfaceType{},
+			Name: &ast.Ident{Name: `InterfaceType`},
+		},
+		file: pkgPath,
+	})
+
 	dbg("getDecls: parsing dir %#v: %#v", pkg.Dir, pkg.GoFiles)
 	fset := token.NewFileSet()
 	pkgs, err := goutil.ParseFiles(fset, pkg.Dir, pkg.GoFiles, parser.ParseComments)
@@ -230,6 +245,8 @@ func getDecls(pkg *build.Package, pkgPath string) ([]declCache, error) {
 				if gd, ok := d.(*ast.GenDecl); ok {
 					for _, s := range gd.Specs {
 						if ts, ok := s.(*ast.TypeSpec); ok {
+							dbg("getDecls: ts: %#v - %#v - %#v", ts.Type, ts.Name.Name, path)
+
 							// For:
 							//     // Commment!
 							//     type Foo struct{}
@@ -289,9 +306,9 @@ func (err ErrNotStruct) Error() string {
 // References are stored in prog.References. This also finds and stores all
 // nested references, so for:
 //
-//  type Foo struct {
-//    Field Bar
-//  }
+//	type Foo struct {
+//	  Field Bar
+//	}
 //
 // A GetReference("Foo", "") call will add two entries to prog.References: Foo
 // and Bar (but only Foo is returned).
@@ -327,6 +344,8 @@ func GetReference(prog *Program, context string, isEmbed bool, lookup, filePath 
 	if err != nil {
 		return nil, err
 	}
+
+	dbg("getReference: found type: %v", ts.Name)
 
 	var st *ast.StructType
 	switch typ := ts.Type.(type) {
@@ -371,6 +390,8 @@ func GetReference(prog *Program, context string, isEmbed bool, lookup, filePath 
 	default:
 		return nil, fmt.Errorf("invalid context: %q", context)
 	}
+
+	dbg("getReference: first range")
 
 	// Parse all the fields.
 	// TODO(param): only reason we do this is to make things a bit easier during
@@ -428,6 +449,8 @@ func GetReference(prog *Program, context string, isEmbed bool, lookup, filePath 
 		nested       []string
 		nestedTagged []*ast.Field
 	)
+
+	dbg("getReference: second range")
 
 	// Scan all fields of f if it refers to a struct. Do this after storing the
 	// reference in prog.References to prevent cyclic lookup issues.
@@ -705,6 +728,10 @@ start:
 // Add the type declaration to references.
 func resolveType(prog *Program, context string, isEmbed bool, typ *ast.Ident, filePath, pkg string) error {
 	var ts *ast.TypeSpec
+
+	dbg("resolveType: context: %#v, isEmbed: %#v, typ: %#v, filePath: %#v, pkg: %#v",
+		context, isEmbed, typ, filePath, pkg)
+
 	if typ.Obj == nil {
 		var err error
 		ts, _, _, err = findType(filePath, pkg, typ.Name)

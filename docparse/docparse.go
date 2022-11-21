@@ -19,6 +19,12 @@ import (
 	"github.com/teamwork/utils/stringutil"
 )
 
+type EmptyInterface interface{}
+type EmptyStructInterfaces struct {
+	Data      interface{}
+	DataArray []interface{}
+}
+
 // Program is the entire program: all collected endpoints and all collected
 // references.
 type Program struct {

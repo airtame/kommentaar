@@ -551,6 +551,11 @@ arrayStart:
 			pkg = importPath
 		}
 
+	case *ast.InterfaceType:
+		name = &ast.Ident{
+			Name: "interface{}",
+		}
+
 	default:
 		return fmt.Errorf("fieldToSchema: unknown array type: %T", typ)
 	}
